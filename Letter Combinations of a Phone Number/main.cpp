@@ -12,20 +12,25 @@
 
 using namespace std;
 
-void dfs(string & s, string & source, vector<string> &ret, int start, int len);
+void dfs(string & s, string & digits, vector<string> & ret, int level, string *map);
+vector<string> letterCombinations(string digits);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    string s = "abc";
-    vector<string> v;
-    v.push_back(s);
-    s.pop_back();
-    cout << s << endl;
-    cout << v[0] << endl;
+    string digits = "";
+    vector<string> ret = letterCombinations(digits);
+    cout << ret.size() << endl;
+    for (int i = 0; i < ret.size(); i++) {
+        cout << ret[i] << endl;
+    }
     return 0;
 }
 
 vector<string> letterCombinations(string digits) {
+    if (digits.empty()) {
+        return {};
+    }
+    
     string map[10] {
         "",
         "",
@@ -39,18 +44,21 @@ vector<string> letterCombinations(string digits) {
         "wxyz"
     };
     vector<string> ret;
-    
+    string s = "";
+    dfs(s, digits, ret, 0, map);
     return ret;
 }
 
-void dfs(string & s, string & source, vector<string> & ret, int start, int len) {
-    if (start >= len) {
+void dfs(string & s, string & digits, vector<string> & ret, int level, string *map) {
+    if (level == digits.size()) {
         ret.push_back(s);
         return;
     }
-    for (start = 0; start < len; start++) {
-        s.push_back(source[start]);
-        dfs(s, source, ret, start + 1, len);
+    string temp = map[digits[level] - '0'];
+    int len = (int)temp.size();
+    for (int i = 0; i < len; i++) {
+        s.push_back(temp[i]);
+        dfs(s, digits, ret, level + 1, map);
         s.pop_back();
     }
 }
